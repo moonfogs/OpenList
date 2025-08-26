@@ -110,7 +110,15 @@ func DeleteCache(storage driver.Driver, path string) {
 }
 
 func Key(storage driver.Driver, path string) string {
-	return stdpath.Join(storage.GetStorage().MountPath, utils.FixAndCleanPath(path))
+    mountPath := storage.GetStorage().MountPath
+    
+    if strings.Contains(mountPath, ".balance") {
+        if idx := strings.Index(mountPath, ".balance"); idx != -1 {
+            mountPath = mountPath[:idx]
+        }
+    }
+    
+    return stdpath.Join(mountPath, utils.FixAndCleanPath(path))
 }
 
 // List files in storage, not contains virtual file
